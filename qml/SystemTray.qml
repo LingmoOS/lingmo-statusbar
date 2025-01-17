@@ -91,16 +91,16 @@ ListView {
             onTriggered: iconItem.updateIcon()
         }
 
-        ColorOverlay {
-            id: iconOverlay
-            anchors.centerIn: parent
-            width: rootItem.iconSize
-            height: width
-            source: iconItem
-            color: rootItem.textColor
-            opacity: rootItem.darkMode ? 1 : 0.7
-            visible: model.canColorOverlay
-        }
+        // ColorOverlay {
+        //     id: iconOverlay
+        //     anchors.centerIn: parent
+        //     width: rootItem.iconSize
+        //     height: width
+        //     source: iconItem
+        //     color: rootItem.textColor
+        //     opacity: rootItem.darkMode ? 1 : 0.7
+        //     visible: model.canColorOverlay
+        // }
 
         LingmoUI.IconItem {
             id: iconItem

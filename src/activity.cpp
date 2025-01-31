@@ -164,7 +164,7 @@ void Activity::onActiveWindowChanged()
 
     if (NET::typeMatchesMask(info.windowType(NET::AllTypesMask), NET::DesktopMask)) {
         m_title = tr("");
-        m_icon = "sysytemlogo";
+        m_icon = "systemlogo";
 
         emit titleChanged();
         emit iconChanged();

@@ -111,13 +111,39 @@ Item {
         anchors.rightMargin: LingmoUI.Units.smallSpacing
         spacing: LingmoUI.Units.smallSpacing / 2
 
-        // App name
+        // System Logo
+        StandardItem {
+            id: systemLogoItem
+            animationEnabled: true
+            Layout.fillHeight: true
+            Layout.preferredWidth: systemLogo.width + LingmoUI.Units.largeSpacing
+            onClicked: {
+                if (mouse.button === Qt.LeftButton)
+                    acticity.showSystemMenu()
+            }
+
+            Image {
+                id: systemLogo
+                anchors.centerIn: parent
+                width: rootItem.iconSize
+                height: rootItem.iconSize
+                sourceSize: Qt.size(rootItem.iconSize, rootItem.iconSize)
+                source: "image://icontheme/systemlogo"
+                visible: true
+                antialiasing: true
+                smooth: false
+            }
+        }
+
+        // App name and icon
         StandardItem {
             id: acticityItem
             animationEnabled: true
             Layout.fillHeight: true
             Layout.preferredWidth: Math.min(rootItem.width / 3,
                                             acticityLayout.implicitWidth + LingmoUI.Units.largeSpacing)
+            // 当窗口标题为 lingmo-desktop 时不显示
+            visible: acticity.title !== "lingmo-desktop"
             onClicked: {
                 if (mouse.button === Qt.RightButton)
                     acticityMenu.open()
@@ -134,8 +160,7 @@ Item {
                     id: acticityIcon
                     width: rootItem.iconSize
                     height: rootItem.iconSize
-                    sourceSize: Qt.size(rootItem.iconSize,
-                                        rootItem.iconSize)
+                    sourceSize: Qt.size(rootItem.iconSize, rootItem.iconSize)
                     source: acticity.icon ? "image://icontheme/" + acticity.icon : ""
                     visible: status === Image.Ready
                     antialiasing: true
@@ -281,7 +306,7 @@ Item {
             popupText: permissionSurveillance.cameraUser + " " + qsTr("is using the camera")
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: shutdownIcon.implicitWidth + LingmoUI.Units.smallSpacing + 4
+            Layout.preferredWidth: volumeIcon.implicitWidth + LingmoUI.Units.smallSpacing + 4
             Image {
                 id: permissionSurveillanceIcon
                 anchors.centerIn: parent
@@ -380,32 +405,32 @@ Item {
             }
         }
 
-        StandardItem {
-            id: shutdownItem
+        // StandardItem {
+        //     id: shutdownItem
 
-            animationEnabled: true
-            Layout.fillHeight: true
-            Layout.preferredWidth: shutdownIcon.implicitWidth + LingmoUI.Units.smallSpacing
-            checked: shutdownDialog.item.visible
+        //     animationEnabled: true
+        //     Layout.fillHeight: true
+        //     Layout.preferredWidth: shutdownIcon.implicitWidth + LingmoUI.Units.smallSpacing
+        //     checked: shutdownDialog.item.visible
 
-            onClicked: {
-                shutdownDialog.item.position = Qt.point(0, 0)
-                shutdownDialog.item.position = mapToGlobal(0, 0)
-                shutdownDialog.item.open()
-            }
+        //     onClicked: {
+        //         shutdownDialog.item.position = Qt.point(0, 0)
+        //         shutdownDialog.item.position = mapToGlobal(0, 0)
+        //         shutdownDialog.item.open()
+        //     }
 
-            Image {
-                id: shutdownIcon
-                anchors.centerIn: parent
-                width: rootItem.iconSize
-                height: width
-                sourceSize: Qt.size(width, height)
-                source: "qrc:/images/" + (rootItem.darkMode ? "dark/" : "light/") + "system-shutdown-symbolic.svg"
-                asynchronous: true
-                antialiasing: true
-                smooth: false
-            }
-        }
+        //     Image {
+        //         id: shutdownIcon
+        //         anchors.centerIn: parent
+        //         width: rootItem.iconSize
+        //         height: width
+        //         sourceSize: Qt.size(width, height)
+        //         source: "qrc:/images/" + (rootItem.darkMode ? "dark/" : "light/") + "system-shutdown-symbolic.svg"
+        //         asynchronous: true
+        //         antialiasing: true
+        //         smooth: false
+        //     }
+        // }
 
         // Pop-up notification center and calendar
         StandardItem {
@@ -509,11 +534,11 @@ Item {
         asynchronous: true
     }
 
-    Loader {
-        id: shutdownDialog
-        sourceComponent: ShutdownDialog {}
-        asynchronous: true
-    }
+    // Loader {
+    //     id: shutdownDialog
+    //     sourceComponent: ShutdownDialog {}
+    //     asynchronous: true
+    // }
 
     NM.ActiveConnection {
         id: activeConnection

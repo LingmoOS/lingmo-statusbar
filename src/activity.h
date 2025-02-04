@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include "capplications.h"
+#include "poweractions.h"
 
 class Activity : public QObject
 {
@@ -29,6 +30,7 @@ class Activity : public QObject
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool launchPad READ launchPad NOTIFY launchPadChanged)
+    Q_PROPERTY(QString windowClass READ windowClass NOTIFY windowClassChanged)
 
 public:
     explicit Activity(QObject *parent = nullptr);
@@ -37,6 +39,7 @@ public:
 
     QString title() const;
     QString icon() const;
+    QString windowClass() const { return m_windowClass; }
 
     Q_INVOKABLE void close();
     Q_INVOKABLE void minimize();
@@ -44,6 +47,7 @@ public:
     Q_INVOKABLE void maximize();
     Q_INVOKABLE void toggleMaximize();
     Q_INVOKABLE void move();
+    Q_INVOKABLE void showSystemMenu();
 
     bool isAcceptableWindow(quint64 wid);
 
@@ -53,19 +57,32 @@ private slots:
     void clearTitle();
     void clearIcon();
 
+    void aboutThisPC();
+    void softwareUpdate();
+
+    void shutdown();
+    void suspend();
+    void reboot();
+    void logout();
+    void lockScreen();
+
 signals:
     void titleChanged();
     void iconChanged();
     void launchPadChanged();
+    void windowClassChanged();
 
 private:
     CApplications *m_cApps;
+    PowerActions *m_powerActions;
     QString m_title;
     QString m_icon;
     QString m_windowClass;
     quint32 m_pid;
 
     bool m_launchPad;
+
+    QWidget *m_systemLogoWidget;
 };
 
 #endif // ACTIVITY_H

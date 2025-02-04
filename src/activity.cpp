@@ -26,9 +26,14 @@
 #include <QDirIterator>
 #include <QSettings>
 #include <QRegularExpression>
+#include <QMenu>
+#include <QProcess>
+#include <QEvent>
+#include <QWidget>
 
 #include <NETWM>
 #include <KWindowSystem>
+#include "poweractions.h"
 
 static const QStringList blockList = {"lingmo-launcher",
                                       "lingmo-statusbar"};
@@ -36,6 +41,7 @@ static const QStringList blockList = {"lingmo-launcher",
 Activity::Activity(QObject *parent)
     : QObject(parent)
     , m_cApps(CApplications::self())
+    , m_powerActions(new PowerActions(this))
 {
     onActiveWindowChanged();
 
@@ -163,12 +169,11 @@ void Activity::onActiveWindowChanged()
     emit launchPadChanged();
 
     if (NET::typeMatchesMask(info.windowType(NET::AllTypesMask), NET::DesktopMask)) {
-        m_title = tr("");
-        m_icon = "systemlogo";
-
+        m_title = tr("lingmo-desktop");
+        m_icon = "";
+        
         emit titleChanged();
         emit iconChanged();
-
         return;
     }
 
@@ -181,6 +186,7 @@ void Activity::onActiveWindowChanged()
 
     m_pid = info.pid();
     m_windowClass = info.windowClassClass().toLower();
+    emit windowClassChanged();
 
     CAppItem *item = m_cApps->matchItem(m_pid, m_windowClass);
 
@@ -203,6 +209,16 @@ void Activity::onActiveWindowChanged()
     }
 }
 
+void Activity::aboutThisPC()
+{
+    QProcess::startDetached("lingmo-settings", QStringList() << "-m" << "about");
+}
+
+void Activity::softwareUpdate()
+{
+    QProcess::startDetached("lingmo-updator", QStringList());
+}
+
 void Activity::clearTitle()
 {
     m_title.clear();
@@ -214,3 +230,49 @@ void Activity::clearIcon()
     m_icon.clear();
     emit iconChanged();
 }
+
+void Activity::shutdown()
+{
+    m_powerActions->shutdown();
+}
+
+void Activity::suspend()
+{
+    m_powerActions->suspend();
+}
+
+void Activity::reboot()
+{
+    m_powerActions->reboot();
+}
+
+void Activity::logout()
+{
+    m_powerActions->logout();
+}
+
+void Activity::lockScreen()
+{
+    m_powerActions->lockScreen();
+}
+
+void Activity::showSystemMenu()
+{
+    QMenu *desktopMenu = new QMenu;
+    desktopMenu->addAction(tr("About This PC"), this, &Activity::aboutThisPC);
+    desktopMenu->addAction(tr("Software Update..."), this, &Activity::softwareUpdate);
+    desktopMenu->addSeparator();
+    desktopMenu->addAction(tr("Suspend"), this, &Activity::suspend);
+    desktopMenu->addAction(tr("Lock Screen"), this, &Activity::lockScreen);
+    desktopMenu->addAction(tr("Reboot"), this, &Activity::reboot);
+    desktopMenu->addAction(tr("Shutdown"), this, &Activity::shutdown);
+    desktopMenu->addSeparator();
+    desktopMenu->addAction(tr("Log out"), this, &Activity::logout);
+    
+    QPoint pos = QCursor::pos();
+    pos.setX(0);
+    desktopMenu->popup(pos);
+    
+    connect(desktopMenu, &QMenu::aboutToHide, desktopMenu, &QMenu::deleteLater);
+}
+

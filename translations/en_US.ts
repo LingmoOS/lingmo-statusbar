@@ -4,8 +4,43 @@
 <context>
     <name>Activity</name>
     <message>
-        <location filename="../src/activity.cpp" line="166"/>
-        <source>Desktop</source>
+        <location filename="../src/activity.cpp" line="172"/>
+        <source>lingmo-desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="262"/>
+        <source>About This PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="263"/>
+        <source>Software Update...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="265"/>
+        <source>Suspend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="266"/>
+        <source>Lock Screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="267"/>
+        <source>Reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="268"/>
+        <source>Shutdown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/activity.cpp" line="270"/>
+        <source>Log out</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -73,8 +108,13 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="73"/>
+        <location filename="../qml/main.qml" line="102"/>
         <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="306"/>
+        <source>is using the camera</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

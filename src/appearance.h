@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2024 LingmoOS Team.
+ * Copyright (C) 2025 Lingmo OS Team.
  *
- * Author:     lingmoos <lingmoos@foxmail.com>
+ * Author:     Lingmo OS Team <team@lingmo.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,9 @@ public:
 
     double devicePixelRatio() const;
     Q_INVOKABLE void setDevicePixelRatio(double value);
+
+    Q_INVOKABLE void lightThemeChanged();
+    Q_INVOKABLE void darkThemeChanged();
 
 signals:
     void dockIconSizeChanged();

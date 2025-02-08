@@ -273,7 +273,14 @@ ControlCenterDialog {
                                                            : "qrc:/images/light/dark-mode.svg"
                     checked: LingmoUI.Theme.darkMode
                     label: qsTr("Dark Mode")
-                    onClicked: appearance.switchDarkMode(!LingmoUI.Theme.darkMode)
+                    onClicked: {
+                        appearance.switchDarkMode(!LingmoUI.Theme.darkMode)
+                        if (LingmoUI.Theme.darkMode) {
+                            appearance.darkThemeChanged()
+                        } else {
+                            appearance.lightThemeChanged()
+                        }
+                    }
                 }
 
                 CardItem {

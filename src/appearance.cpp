@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2024 LingmoOS Team.
+ * Copyright (C) 2025 Lingmo OS Team.
  *
- * Author:     lingmoos <lingmoos@foxmail.com>
+ * Author:     Lingmo OS Team <team@lingmo.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -174,4 +174,14 @@ void Appearance::setDevicePixelRatio(double value)
     if (iface.isValid()) {
         iface.call("setDevicePixelRatio", value);
     }
+}
+
+void Appearance::lightThemeChanged()
+{
+    QProcess::startDetached("lookandfeeltool", QStringList() << "-a" << "org.lingmo.ocean.desktop");
+}
+
+void Appearance::darkThemeChanged()
+{
+    QProcess::startDetached("lookandfeeltool", QStringList() << "-a" << "org.lingmo.oceandark.desktop");
 }

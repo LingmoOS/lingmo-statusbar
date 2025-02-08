@@ -24,6 +24,7 @@
 #include <QDBusReply>
 #include <QDBusServiceWatcher>
 #include <QDBusPendingCall>
+#include <QProcess>
 
 Appearance::Appearance(QObject *parent)
     : QObject(parent)

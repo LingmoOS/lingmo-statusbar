@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2024 LingmoOS Team.
+ * Copyright (C) 2025 Lingmo OS Team.
  *
  * Author:     Reion Wong <aj@lingmo.org>
+ * Author:     Lingmo OS Team <team@lingmo.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -276,9 +277,9 @@ ControlCenterDialog {
                     onClicked: {
                         appearance.switchDarkMode(!LingmoUI.Theme.darkMode)
                         if (LingmoUI.Theme.darkMode) {
-                            appearance.darkThemeChanged()
-                        } else {
                             appearance.lightThemeChanged()
+                        } else {
+                            appearance.darkThemeChanged()
                         }
                     }
                 }

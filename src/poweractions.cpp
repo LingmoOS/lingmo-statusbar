@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2024 LingmoOS Team.
+ * Copyright (C) 2025 Lingmo OS Team.
  *
  * Author:     revenmartin <revenmartin@gmail.com>
+ * Author:     Lingmo OS Team <team@lingmo.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +27,10 @@
 const static QString s_dbusName = "com.lingmo.Session";
 const static QString s_pathName = "/Session";
 const static QString s_interfaceName = "com.lingmo.Session";
+const static QString s_ksmserver = "org.kde.ksmserver";
+const static QString s_kpathName = "/KSMServer";
+const static QString s_kinterfaceName = "org.kde.KSMServerInterface";
+
 
 PowerActions::PowerActions(QObject *parent)
     : QObject(parent)
@@ -43,10 +48,12 @@ void PowerActions::shutdown()
 
 void PowerActions::logout()
 {
-    QDBusInterface iface(s_dbusName, s_pathName, s_interfaceName, QDBusConnection::sessionBus());
-    if (iface.isValid()) {
-        iface.call("logout");
-    }
+    // QDBusInterface iface(s_dbusName, s_pathName, s_interfaceName, QDBusConnection::sessionBus());
+    // if (iface.isValid()) {
+    //     iface.call("logout");
+    // }
+    QDBusInterface ksmserver(s_ksmserver, s_kpathName, s_kinterfaceName, QDBusConnection::sessionBus());
+    QDBusMessage reply = ksmserver.call("logout", 0, 0, 0);
 }
 
 void PowerActions::reboot()

@@ -10,16 +10,16 @@
     </message>
     <message>
         <source>On</source>
-        <translation type="vanished">オン</translation>
+        <translation>オン</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="vanished">オフ</translation>
+        <translation>オフ</translation>
     </message>
     <message>
         <location filename="../qml/ControlCenter.qml" line="173"/>
         <source>Control Center</source>
-        <translation type="unfinished"></translation>
+        <translation>コントロール センター</translation>
     </message>
     <message>
         <location filename="../qml/ControlCenter.qml" line="259"/>
@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ControlCenter.qml" line="285"/>
         <source>Do Not Disturb</source>
-        <translation type="unfinished"></translation>
+        <translation>集中モード</translation>
     </message>
     <message>
         <location filename="../qml/ControlCenter.qml" line="295"/>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット</translation>
     </message>
 </context>
 <context>
@@ -47,27 +47,27 @@
     <message>
         <location filename="../qml/ShutdownDialog.qml" line="140"/>
         <source>Shutdown</source>
-        <translation type="unfinished"></translation>
+        <translation>シャットダウン</translation>
     </message>
     <message>
         <location filename="../qml/ShutdownDialog.qml" line="155"/>
         <source>Reboot</source>
-        <translation type="unfinished"></translation>
+        <translation>再起動</translation>
     </message>
     <message>
         <location filename="../qml/ShutdownDialog.qml" line="170"/>
         <source>Log out</source>
-        <translation type="unfinished"></translation>
+        <translation>ログアウト</translation>
     </message>
     <message>
         <location filename="../qml/ShutdownDialog.qml" line="185"/>
         <source>Lock Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>画面をロック</translation>
     </message>
     <message>
         <location filename="../qml/ShutdownDialog.qml" line="200"/>
         <source>Suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>スリープ</translation>
     </message>
 </context>
 <context>
@@ -80,7 +80,7 @@
     <message>
         <location filename="../qml/main.qml" line="282"/>
         <source>is using the camera</source>
-        <translation type="unfinished"></translation>
+        <translation>はカメラを使用しています</translation>
     </message>
 </context>
 </TS>

@@ -29,15 +29,18 @@ import LingmoUI.CompatibleModule 3.0 as LingmoUI
 Item {
     id: rootItem
 
-    property int iconSize: 16
+    // Every status icon is 16 px and sits in a cell of the same width, so the
+    // icons on the right keep an even rhythm whatever they are
+    property int iconSize: LingmoUI.Units.iconSizes.small
+    property int cellWidth: iconSize + LingmoUI.Units.largeSpacing
 
     LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
     // Follows the system theme (the wallpaper-driven colour logic was never ported)
     property bool darkMode: LingmoUI.Theme.darkMode
-    property color textColor: rootItem.darkMode ? "#FFFFFF" : "#000000";
-    property var fontSize: rootItem.height ? rootItem.height / 3 : 1
+    property color textColor: LingmoUI.Theme.textColor
+    property real fontSize: LingmoUI.Theme.fontSize
 
     property var timeFormat: StatusBar.twentyFourTime ? "HH:mm" : "h:mm ap"
 
@@ -72,34 +75,28 @@ Item {
     //     }
     // }
 
-    // Solid bar: white in the light theme, Dracula-like near-black in the dark one
+    // Translucent over the blurred wallpaper when there is a compositor (KWin blurs
+    // behind the bar, see StatusBar::updateGeometry), solid without one. Opaque
+    // enough that the text keeps its contrast over any wallpaper.
     Rectangle {
         id: background
         anchors.fill: parent
-        color: rootItem.darkMode ? "#282A36" : "#FFFFFF"
+        color: LingmoUI.Theme.backgroundColor
+        opacity: windowHelper.compositing ? (rootItem.darkMode ? 0.72 : 0.78) : 1.0
 
         Behavior on color {
-            ColorAnimation { duration: 200 }
+            ColorAnimation { duration: 200; easing.type: Easing.Linear }
         }
+    }
 
-        // Hairline separating the bar from the desktop
-        Rectangle {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: 1
-            color: rootItem.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08)
-        }
-
-//        color: LingmoUI.Theme.darkMode ? "#4D4D4D" : "#FFFFFF"
-//        opacity: windowHelper.compositing ? LingmoUI.Theme.darkMode ? 0.5 : 0.7 : 1.0
-
-//        Behavior on color {
-//            ColorAnimation {
-//                duration: 100
-//                easing.type: Easing.Linear
-//            }
-//        }
+    // Hairline separating the bar from the desktop
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 1
+        color: Qt.rgba(rootItem.textColor.r, rootItem.textColor.g, rootItem.textColor.b,
+                       rootItem.darkMode ? 0.1 : 0.08)
     }
 
     LingmoUI.WindowHelper {
@@ -110,11 +107,26 @@ Item {
         id: popupTips
     }
 
+    // The app menu: the bold app name at the left opens it
     LingmoUI.DesktopMenu {
         id: acticityMenu
 
         MenuItem {
-            text: qsTr("Close")
+            text: qsTr("Minimize")
+            icon.name: "window-minimize"
+            onTriggered: acticity.minimize()
+        }
+
+        MenuItem {
+            text: qsTr("Maximize / Restore")
+            icon.name: "window-maximize"
+            onTriggered: acticity.toggleMaximize()
+        }
+
+        MenuSeparator {}
+
+        MenuItem {
+            text: acticity.title ? qsTr("Quit %1").arg(acticity.title) : qsTr("Close")
             icon.name: "window-close"
             onTriggered: acticity.close()
         }
@@ -125,17 +137,19 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: LingmoUI.Units.smallSpacing
         anchors.rightMargin: LingmoUI.Units.smallSpacing
-        spacing: LingmoUI.Units.smallSpacing / 2
+        spacing: 0
 
-        // App name
+        // App name (bold) — opens the app menu
         StandardItem {
             id: acticityItem
             animationEnabled: true
             Layout.fillHeight: true
             Layout.preferredWidth: Math.min(rootItem.width / 3,
                                             acticityLayout.implicitWidth + LingmoUI.Units.largeSpacing)
-            onClicked: {
-                if (mouse.button === Qt.RightButton)
+            visible: acticity.title !== ""
+            checked: acticityMenu.visible
+            onClicked: function(mouse) {
+                if (mouse.button !== Qt.MiddleButton)
                     acticityMenu.open()
             }
 
@@ -167,6 +181,7 @@ Item {
                     visible: text
                     Layout.alignment: Qt.AlignVCenter
                     font.pointSize: rootItem.fontSize
+                    font.bold: true
                 }
             }
         }
@@ -297,7 +312,7 @@ Item {
             popupText: permissionSurveillance.cameraUser + " " + qsTr("is using the camera")
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: shutdownIcon.implicitWidth + LingmoUI.Units.smallSpacing + 4
+            Layout.preferredWidth: rootItem.cellWidth
             Image {
                 id: permissionSurveillanceIcon
                 anchors.centerIn: parent
@@ -316,7 +331,7 @@ Item {
             id: spotlightItem
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: rootItem.iconSize + LingmoUI.Units.largeSpacing
+            Layout.preferredWidth: rootItem.cellWidth
             popupText: qsTr("Spotlight") + (spotlightShortcut.shortcut ? " (" + spotlightShortcut.shortcut + ")" : "")
 
             onClicked: function(mouse) {
@@ -357,7 +372,7 @@ Item {
             visible: keyboardLayout.count > 1
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: Math.max(_layoutLabel.implicitWidth, rootItem.iconSize) + LingmoUI.Units.largeSpacing
+            Layout.preferredWidth: Math.max(_layoutLabel.implicitWidth + LingmoUI.Units.largeSpacing, rootItem.cellWidth)
             popupText: keyboardLayout.currentDescription
 
             onClicked: function(mouse) {
@@ -453,7 +468,7 @@ Item {
                             id: _vpnLabel
                             anchors.centerIn: parent
                             text: "VPN"
-                            font.pixelSize: 9
+                            font.pointSize: Math.max(6, rootItem.fontSize - 3)
                             font.bold: true
                             color: rootItem.textColor
                         }
@@ -466,8 +481,9 @@ Item {
 
                     Image {
                         id: batteryIcon
+                        // Battery glyphs are wider than tall: 16 px high like the others
                         height: rootItem.iconSize
-                        width: height + 6
+                        width: Math.round(height * 1.375)
                         sourceSize: Qt.size(width, height)
                         source: "qrc:/images/" + (rootItem.darkMode ? "dark/" : "light/") + battery.iconSource
                         Layout.alignment: Qt.AlignCenter
@@ -490,7 +506,7 @@ Item {
 
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: shutdownIcon.implicitWidth + LingmoUI.Units.smallSpacing
+            Layout.preferredWidth: rootItem.cellWidth
             checked: shutdownDialog.item.visible
 
             onClicked: {
@@ -518,7 +534,7 @@ Item {
 
             animationEnabled: true
             Layout.fillHeight: true
-            Layout.preferredWidth: _bellItem.implicitWidth + LingmoUI.Units.largeSpacing
+            Layout.preferredWidth: Math.max(_bellItem.implicitWidth + LingmoUI.Units.largeSpacing, rootItem.cellWidth)
 
             onClicked: {
                 process.startDetached("lingmo-notificationd", ["-s"])
@@ -556,15 +572,15 @@ Item {
                     height: 13
                     width: Math.max(height, _badgeText.implicitWidth + 7)
                     radius: height / 2
-                    color: "#F2555A"
+                    color: LingmoUI.Theme.redColor
 
                     Label {
                         id: _badgeText
                         anchors.centerIn: parent
                         text: notificationState.count > 99 ? "99+" : notificationState.count
-                        font.pixelSize: 9
+                        font.pointSize: Math.max(6, rootItem.fontSize - 3)
                         font.bold: true
-                        color: "white"
+                        color: LingmoUI.Theme.highlightedTextColor
                     }
                 }
             }
@@ -577,6 +593,7 @@ Item {
             animationEnabled: true
             Layout.fillHeight: true
             Layout.preferredWidth: timeLabel.implicitWidth + LingmoUI.Units.largeSpacing
+            Layout.leftMargin: LingmoUI.Units.smallSpacing / 2
             checked: calendarPopup.item ? calendarPopup.item.visible : false
 
             onClicked: {
@@ -588,6 +605,7 @@ Item {
                 id: timeLabel
                 anchors.centerIn: parent
                 font.pointSize: rootItem.fontSize
+                font.weight: Font.Medium
                 color: rootItem.textColor
 
                 Timer {
@@ -597,12 +615,12 @@ Item {
                     running: true
                     triggeredOnStart: true
                     onTriggered: {
-                        // Date and time in the system language, e.g. "sáb 26 set  13:47"
+                        // Date and time in the system language, e.g. "qui 16 out 14:32"
                         const now = new Date()
                         const date = now.toLocaleDateString(Qt.locale(), "ddd d MMM").replace(/\./g, "")
                         const time = now.toLocaleTimeString(Qt.locale(), StatusBar.twentyFourTime ? rootItem.timeFormat
                                                                                                 : Locale.ShortFormat)
-                        timeLabel.text = date + "  " + time
+                        timeLabel.text = date + " " + time
                     }
                 }
             }
@@ -707,7 +725,7 @@ Item {
         height: 170
         flags: Qt.Dialog | Qt.WindowStaysOnTopHint
         title: qsTr("Spotlight shortcut")
-        color: rootItem.darkMode ? "#282A36" : "#FFFFFF"
+        color: LingmoUI.Theme.backgroundColor
 
         property string captured: ""
         property string error: ""
@@ -756,7 +774,7 @@ Item {
                 Label {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: 16
+                    font.pointSize: rootItem.fontSize * 1.6
                     font.bold: true
                     text: shortcutDialog.captured || spotlightShortcut.shortcut || "…"
                     color: shortcutDialog.captured ? LingmoUI.Theme.highlightColor : rootItem.textColor
@@ -767,7 +785,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     visible: shortcutDialog.error !== ""
                     text: shortcutDialog.error
-                    color: "#F2555A"
+                    color: LingmoUI.Theme.redColor
                     wrapMode: Text.WordWrap
                 }
 

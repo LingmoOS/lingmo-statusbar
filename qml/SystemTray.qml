@@ -13,12 +13,13 @@ ListView {
     layoutDirection: Qt.RightToLeft
     interactive: false
     clip: true
-    spacing: LingmoUI.Units.smallSpacing / 2
+    spacing: 0
 
-    property real itemWidth: rootItem.iconSize + LingmoUI.Units.largeSpacing
+    // Same cell as the other status icons, so the whole right side is one grid
+    property real itemWidth: rootItem.cellWidth
 
     Layout.fillHeight: true
-    Layout.preferredWidth: (itemWidth + (count - 1) * LingmoUI.Units.smallSpacing) * count
+    Layout.preferredWidth: itemWidth * count
 
     model: SystemTrayModel {
         id: trayModel
@@ -117,7 +118,6 @@ ListView {
             anchors.fill: iconItem
             source: iconSource
             color: rootItem.textColor
-            opacity: rootItem.darkMode ? 1 : 0.7
             visible: model.canColorOverlay && !dragStarted
         }
 

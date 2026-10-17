@@ -61,6 +61,30 @@
         <source>Wired</source>
         <translation>Cabeada</translation>
     </message>
+    <message>
+        <source>Airplane Mode</source>
+        <translation>Modo avião</translation>
+    </message>
+    <message>
+        <source>Output device</source>
+        <translation>Dispositivo de saída</translation>
+    </message>
+    <message>
+        <source>Battery settings</source>
+        <translation>Configurações de bateria</translation>
+    </message>
+    <message>
+        <source>Power Saver</source>
+        <translation>Economia</translation>
+    </message>
+    <message>
+        <source>Balanced</source>
+        <translation>Equilibrado</translation>
+    </message>
+    <message>
+        <source>Performance</source>
+        <translation>Desempenho</translation>
+    </message>
 </context>
 <context>
     <name>ShutdownDialog</name>
@@ -164,6 +188,18 @@
         <location line="+36"/>
         <source>Keyboard settings…</source>
         <translation>Configurações do teclado…</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimizar</translation>
+    </message>
+    <message>
+        <source>Maximize / Restore</source>
+        <translation>Maximizar / Restaurar</translation>
+    </message>
+    <message>
+        <source>Quit %1</source>
+        <translation>Encerrar %1</translation>
     </message>
 </context>
 </TS>

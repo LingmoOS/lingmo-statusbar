@@ -37,12 +37,19 @@
 #include <KX11Extras>
 #include <KWindowEffects>
 
+static const int s_defaultHeight = 28;
+static const int s_minHeight = 24;
+static const int s_maxHeight = 40;
+
 StatusBar::StatusBar(QQuickView *parent)
     : QQuickView(parent)
     , m_acticity(new Activity)
 {
     QSettings settings("lingmoos", "locale");
     m_twentyFourTime = settings.value("twentyFour", false).toBool();
+
+    QSettings barSettings(QSettings::UserScope, "lingmoos", "statusbar");
+    m_barHeight = qBound(s_minHeight, barSettings.value("Height", s_defaultHeight).toInt(), s_maxHeight);
 
     setFlags(Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus);
     setColor(Qt::transparent);
@@ -132,6 +139,19 @@ void StatusBar::setTwentyFourTime(bool t)
     }
 }
 
+void StatusBar::setHeight(int height)
+{
+    height = qBound(s_minHeight, height, s_maxHeight);
+    if (height == m_barHeight)
+        return;
+
+    m_barHeight = height;
+    QSettings barSettings(QSettings::UserScope, "lingmoos", "statusbar");
+    barSettings.setValue("Height", height);
+    emit barHeightChanged();
+    updateGeometry();
+}
+
 void StatusBar::updateGeometry()
 {
     // The primary screen's, not screen(): Qt moves that to whichever screen the
@@ -144,7 +164,7 @@ void StatusBar::updateGeometry()
         emit screenRectChanged();
     }
 
-    QRect windowRect = QRect(rect.x(), rect.y(), rect.width(), 25);
+    QRect windowRect = QRect(rect.x(), rect.y(), rect.width(), m_barHeight);
     setGeometry(windowRect);
     updateViewStruts();
 

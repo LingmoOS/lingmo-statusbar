@@ -101,6 +101,10 @@
         <file>images/media-skip-backward-symbolic.svg</file>
         <file>images/media-skip-forward-symbolic.svg</file>
         <file>qml/ControlCenter.qml</file>
+        <file>qml/ControlCard.qml</file>
+        <file>qml/SliderRow.qml</file>
+        <file>images/light/airplane-mode.svg</file>
+        <file>images/dark/airplane-mode.svg</file>
         <file>qml/CalendarPopup.qml</file>
         <file>qml/CardItem.qml</file>
         <file>qml/IconButton.qml</file>

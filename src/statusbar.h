@@ -29,6 +29,7 @@ class StatusBar : public QQuickView
     Q_OBJECT
     Q_PROPERTY(QRect screenRect READ screenRect NOTIFY screenRectChanged)
     Q_PROPERTY(bool twentyFourTime READ twentyFourTime NOTIFY twentyFourTimeChanged)
+    Q_PROPERTY(int barHeight READ barHeight NOTIFY barHeightChanged)
 
 public:
     explicit StatusBar(QQuickView *parent = nullptr);
@@ -39,6 +40,10 @@ public:
     void setBatteryPercentage(bool enabled);
     void setTwentyFourTime(bool t);
 
+    // Height of the bar, ~/.config/lingmoos/statusbar.conf [General] Height
+    int barHeight() const { return m_barHeight; }
+    void setHeight(int height);
+
     void updateGeometry();
     void updateViewStruts();
 
@@ -46,6 +51,7 @@ signals:
     void screenRectChanged();
     void launchPadChanged();
     void twentyFourTimeChanged();
+    void barHeightChanged();
 
 private slots:
     void initState();
@@ -60,6 +66,7 @@ private:
     QRect m_screenRect;
     Activity *m_acticity;
     bool m_twentyFourTime;
+    int m_barHeight;
 };
 
 #endif // STATUSBAR_H

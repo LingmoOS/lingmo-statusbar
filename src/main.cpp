@@ -37,6 +37,7 @@
 #include "battery.h"
 #include "nightlight.h"
 #include "keyboardlayout.h"
+#include "powerprofiles.h"
 
 int main(int argc, char *argv[])
 {
@@ -60,6 +61,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<PermissionSurveillance>(uri, 1, 0, "PermissionSurveillance");
     qmlRegisterType<NightLight>(uri, 1, 0, "NightLight");
     qmlRegisterType<KeyboardLayout>(uri, 1, 0, "KeyboardLayout");
+    qmlRegisterType<PowerProfiles>(uri, 1, 0, "PowerProfiles");
 
     QString qmFilePath = QString("%1/%2.qm").arg("/usr/share/lingmo-statusbar/translations/").arg(QLocale::system().name());
     if (QFile::exists(qmFilePath)) {

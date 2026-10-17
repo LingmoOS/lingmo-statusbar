@@ -33,6 +33,7 @@ set(SRCS
     src/permissionsurveillance.cpp
     src/nightlight.cpp
     src/keyboardlayout.cpp
+    src/powerprofiles.cpp
 
     src/systemtray/statusnotifieritemsource.cpp
     src/systemtray/systemtraytypes.cpp

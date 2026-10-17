@@ -14,9 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 CONFIG REQUIRED Widgets DBus Gui Concurrent LinguistTools QuickControls2)
 find_package(LingmoUI3 REQUIRED)
 find_package(KF6WindowSystem REQUIRED)
-find_package(PkgConfig REQUIRED)
-
-pkg_check_modules(XCB_LIBS REQUIRED xcb)
+find_package(XCB REQUIRED)
 
 set(SRCS
     src/main.cpp
@@ -29,9 +27,13 @@ set(SRCS
     src/activity.cpp
     src/capplications.cpp
     src/notifications.cpp
+    src/spotlightshortcut.cpp
     src/backgroundhelper.cpp
     src/lyricshelper.cpp
     src/permissionsurveillance.cpp
+    src/nightlight.cpp
+    src/keyboardlayout.cpp
+    src/powerprofiles.cpp
 
     src/systemtray/statusnotifieritemsource.cpp
     src/systemtray/systemtraytypes.cpp
@@ -104,19 +106,17 @@ qt6_add_dbus_adaptor(DBUS_SOURCES
 
 add_executable(lingmo-statusbar ${SRCS} ${appmenu_SRCS} ${DBUS_SOURCES})
 
-target_include_directories(lingmo-statusbar PUBLIC ${XCB_LIBS_INCLUDE_DIRS})
 target_link_libraries(lingmo-statusbar
   PRIVATE
   Qt6::Core
   Qt6::Widgets
   Qt6::Quick
   Qt6::QuickControls2
-  Qt6::GuiPrivate
   Qt6::Concurrent
   Qt6::DBus
   KF6::WindowSystem
   LingmoUI3
-  ${XCB_LIBS_LIBRARIES}
+  XCB::XCB
 )
 
 file(GLOB TS_FILES translations/*.ts)
@@ -124,7 +124,7 @@ foreach(filepath ${TS_FILES})
     string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
     list(APPEND ts_files_replaced ${filename})
 endforeach()
-Qt6_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${ts_files_replaced})
+qt_add_translation(QM_FILES ${ts_files_replaced})
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES} SOURCES ${ts_files_replaced})
 

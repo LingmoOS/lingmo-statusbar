@@ -4,7 +4,6 @@
 
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
 import org.deepin.dtk 1.0 as D
 
 import Lingmo.StatusBar 1.0

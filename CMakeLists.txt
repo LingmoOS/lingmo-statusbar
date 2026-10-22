@@ -92,6 +92,8 @@ install(DIRECTORY data/kwin/lingmo-statusbar-activewindow
 )
 
 # Session autostart entry; a status bar is not something you launch by hand.
+# CMAKE_INSTALL_FULL_SYSCONFDIR resolves to /etc for the /usr prefix, which is
+# where autostart entries belong (and where debian/install expects them).
 install(FILES data/lingmo-statusbar.desktop
-    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/xdg/autostart
+    DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/xdg/autostart
 )

@@ -4,7 +4,6 @@
 
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
 
 // Centre section: time and date. Clicking it opens the calendar popup.
 Item {

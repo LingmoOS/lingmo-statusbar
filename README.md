@@ -39,10 +39,12 @@ screen, written with Qt 6 and DTK 6 (Qt Quick + `org.deepin.dtk`).
   (`src/qml/StatusBar.qml`), so the bar stays above normal windows and does not
   appear in the task bar or in the window switcher.
 - Left, from the left edge: the Lingmo menu button, then the application name of
-  the active window, pushed by the KWin script described below. When nothing is
-  pushed, the configurable fallback name is shown (default `Lingmo OS`, override
-  with `$LINGMO_STATUSBAR_FALLBACK_APP`). The Lingmo menu is a `D.Menu` with About
-  This PC, Settings, Log Out and Shut Down and only logs, like the system menu.
+  the active window, pushed by the KWin script described below, then that window's
+  menu titles. When nothing is pushed, the configurable fallback name is shown
+  (default `Lingmo OS`, override with `$LINGMO_STATUSBAR_FALLBACK_APP`). The Lingmo
+  menu is a `D.Menu` with About This PC, Settings, Log Out and Shut Down and only
+  logs, like the system menu. The menu titles come from `com.canonical.dbusmenu`,
+  see "Global menu" below.
 - Middle: empty by design. The bar follows the macOS arrangement, not the GNOME
   one: the clock is not centred, and an `Item { Layout.fillWidth: true }` keeps
   the two groups at their edges.
@@ -54,12 +56,10 @@ screen, written with Qt 6 and DTK 6 (Qt Quick + `org.deepin.dtk`).
   `D.Menu` with Settings, Log Out and Shut Down; each entry calls
   `SystemMenuController::trigger()`, which logs the action and executes nothing.
 
-## What phase 1 does not do
+## What is still missing
 
-- **Global menu**: `com.canonical.dbusmenu` is not implemented. The left section
-  reserves the layout slot and the model hook (`globalMenuRow.globalMenuModel` in
-  `src/qml/AppMenuSection.qml`); nothing is drawn there and no menu titles are
-  requested from the window. Phase 2.
+- **Global menu on Wayland**: the menu is read from X11 window properties, so a
+  Wayland session shows no menu titles. See "Global menu" below.
 - **System tray**: no `org.kde.StatusNotifierWatcher`
   (legacy `com.canonical.StatusNotifierWatcher`) service, no
   `org.kde.StatusNotifierItem` hosting, no `com.canonical.dbusmenu` menus for tray
@@ -77,6 +77,48 @@ screen, written with Qt 6 and DTK 6 (Qt Quick + `org.deepin.dtk`).
   (`LayerShellQt`) is a phase-2 item. On X11 the flags behave as described above.
 - **Localisation**: no `.ts` files; the clock uses `Qt.formatDateTime()` with a
   fixed format string, which is not locale aware.
+
+## Global menu
+
+The menu titles of the active window are shown next to its name; clicking a title
+opens its submenu and clicking an entry sends the click to the application.
+
+A window does not publish its menu to the window manager. The Qt platform theme
+exports the menu as a `com.canonical.dbusmenu` object and advertises the service
+name and the object path in two X11 properties on the window:
+
+| Piece | Evidence |
+| --- | --- |
+| `_KDE_NET_WM_APPMENU_SERVICE_NAME` / `_KDE_NET_WM_APPMENU_OBJECT_PATH` | set by `lingmo-qt-plugins/platformtheme/platformtheme.cpp:27-28`, read by `lingmo-kwin/src/atoms.cpp:64-65` and `lingmo-kwin/src/x11window.h:378` |
+| `com.canonical.AppMenu.Registrar` (`RegisterWindow`) | `lingmo-qt-plugins/platformtheme/qdbusmenubar.cpp:130` |
+| `org.kde.kappmenu` (`showMenu`, `showRequest`) | `lingmo-kwin/src/appmenu.cpp:28-30,98`, `lingmo-workspace/appmenu/org.kde.kappmenu.xml` |
+| dbusmenu layout `(ia{sv}av)` | `lingmo-workspace/appmenu/com.canonical.AppMenu.Registrar.xml`; the demarshalling order follows the retired status bar's `src/libdbusmenuqt/dbusmenutypes_p.cpp:78-95` |
+
+Data flow:
+
+```text
+active window (X11)
+  _KDE_NET_WM_APPMENU_SERVICE_NAME / _KDE_NET_WM_APPMENU_OBJECT_PATH
+    -> AppMenuTracker   (src/appmenu/appmenutracker.cpp, libxcb)
+      -> DbusMenuClient (src/appmenu/dbusmenuclient.cpp)
+           AboutToShow(0), GetLayout(0, -1, <properties>)
+         -> QML: AppMenu.topLevelItems (src/qml/AppMenuBar.qml)
+            click -> Event(id, "clicked") back to the application
+```
+
+Limits of this first phase-2 step: X11 only; one level of nested submenu; the
+pre-click state is refreshed by `LayoutUpdated` and after every click, but
+`ItemsPropertiesUpdated` is not consumed yet.
+
+The client has a headless test that needs no display, no X11 and no DTK:
+
+```bash
+./test/dbusmenu/run.sh
+```
+
+It starts `test/dbusmenu/fake_menu.py` (a fake dbusmenu service) on the session bus
+and checks both the parsed tree and the `Event` call the client sends back. It needs
+`python3-dbus`, `python3-gi` and `moc` from `qt6-base-dev-tools`.
 
 ## Active window data
 

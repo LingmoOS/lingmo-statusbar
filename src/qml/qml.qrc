@@ -4,6 +4,9 @@
         <file>StatusBar.qml</file>
         <file>LingmoMenu.qml</file>
         <file>AppMenuSection.qml</file>
+        <file>AppMenuBar.qml</file>
+        <file>AppMenuPopup.qml</file>
+        <file>AppMenuItemRow.qml</file>
         <file>ClockSection.qml</file>
         <file>CalendarPopup.qml</file>
         <file>TraySection.qml</file>

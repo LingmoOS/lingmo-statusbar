@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "activewindowwatcher.h"
+#include "appmenu/appmenutracker.h"
+#include "appmenu/dbusmenuclient.h"
 #include "kwinscriptloader.h"
 #include "screengeometry.h"
 #include "systemmenucontroller.h"
@@ -67,6 +69,16 @@ int main(int argc, char *argv[])
     SystemMenuController systemMenuController;
     ScreenGeometry screenGeometry(STATUSBAR_BAR_HEIGHT);
 
+    // Global menu of the active window (phase 2). AppMenuTracker reads the X11
+    // properties the active window uses to advertise its com.canonical.dbusmenu
+    // object; without an X connection it reports itself unsupported and the bar
+    // simply shows no menu titles.
+    DbusMenuClient appMenuClient;
+    AppMenuTracker appMenuTracker(&appMenuClient);
+    if (!appMenuTracker.isSupported()) {
+        qInfo() << "no usable X11 display: the global menu stays empty";
+    }
+
     // Export org.lingmo.StatusBar so the KWin helper script can push the active
     // window. Losing the name is not fatal: the bar keeps showing the fallback
     // application name.
@@ -85,6 +97,8 @@ int main(int argc, char *argv[])
                                  "SystemMenuController", &systemMenuController);
     qmlRegisterSingletonInstance(QmlModuleUri, QmlModuleMajorVersion, QmlModuleMinorVersion,
                                  "ScreenGeometry", &screenGeometry);
+    qmlRegisterSingletonInstance(QmlModuleUri, QmlModuleMajorVersion, QmlModuleMinorVersion,
+                                 "AppMenu", &appMenuClient);
 
     QQmlApplicationEngine engine;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)

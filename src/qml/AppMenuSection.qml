@@ -6,12 +6,13 @@ import QtQuick
 
 import Lingmo.StatusBar 1.0
 
-// Left section: application name of the active window, plus the reserved slot for
-// the global menu.
+// Left section: application name of the active window, followed by the menu titles
+// of that window (phase 2).
 Item {
     id: root
 
     property color textColor: "#1b1b1b"
+    property bool darkTheme: false
 
     implicitWidth: row.implicitWidth
     implicitHeight: 24
@@ -36,35 +37,12 @@ Item {
             font.weight: Font.DemiBold
         }
 
-        // ------------------------------------------------------------------
-        // Global menu (phase 2). com.canonical.dbusmenu is NOT implemented in
-        // phase 1: this slot is reserved and stays empty, nothing is faked here.
-        //
-        // Phase 2 feeds `globalMenuRow.globalMenuModel` from the window's
-        // com.canonical.dbusmenu node (Layout signal + AboutToShow), exported by
-        // org.kde.kappmenu on the session bus, and the Repeater below renders the
-        // menu titles of the active window.
-        // ------------------------------------------------------------------
-        Row {
-            id: globalMenuRow
-
+        // Menu titles of the active window. AppMenuBar renders nothing when the
+        // window exports no menu (see src/appmenu/ and src/qml/AppMenuBar.qml).
+        AppMenuBar {
             height: parent.height
-            spacing: 6
-
-            property var globalMenuModel: null
-
-            Repeater {
-                model: globalMenuRow.globalMenuModel
-
-                delegate: Text {
-                    height: globalMenuRow.height
-                    verticalAlignment: Text.AlignVCenter
-                    text: modelData && modelData.title ? modelData.title : ""
-                    color: root.textColor
-                    font.pixelSize: 12
-                    opacity: 0.85
-                }
-            }
+            textColor: root.textColor
+            darkTheme: root.darkTheme
         }
     }
 }

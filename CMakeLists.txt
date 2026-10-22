@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.18)
 
 project(lingmo-statusbar
-    VERSION "0.1.0"
+    VERSION "0.2.0"
     DESCRIPTION "macOS-style top status bar for Lingmo OS"
     HOMEPAGE_URL "https://github.com/LingmoOS/lingmo-statusbar"
     LANGUAGES CXX
@@ -32,6 +32,11 @@ find_package(${QT_NS} REQUIRED COMPONENTS Core Gui Widgets Quick Qml DBus)
 # (libdtk6widget-dev, target Dtk6::Widget), not "Widgets".
 find_package(${DTK_NS} REQUIRED COMPONENTS Core Gui Widget)
 
+# The global menu reads the active window's X11 properties with libxcb directly,
+# the same two atoms lingmo-kwin reads (lingmo-kwin/src/atoms.cpp:64-65).
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(XCB REQUIRED xcb)
+
 # The bar is 36 px tall; the window is as wide as the screen it is pinned to.
 set(STATUSBAR_BAR_HEIGHT 36)
 set(STATUSBAR_DBUS_SERVICE "org.lingmo.StatusBar")
@@ -51,6 +56,10 @@ set(STATUSBAR_SOURCES
     src/main.cpp
     src/activewindowwatcher.h
     src/activewindowwatcher.cpp
+    src/appmenu/appmenutracker.h
+    src/appmenu/appmenutracker.cpp
+    src/appmenu/dbusmenuclient.h
+    src/appmenu/dbusmenuclient.cpp
     src/kwinscriptloader.h
     src/kwinscriptloader.cpp
     src/screengeometry.h
@@ -72,6 +81,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     STATUSBAR_DBUS_PATH="${STATUSBAR_DBUS_PATH}"
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${XCB_INCLUDE_DIRS})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${QT_NS}::Core
     ${QT_NS}::Gui
@@ -82,6 +93,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ${DTK_NS}::Core
     ${DTK_NS}::Gui
     ${DTK_NS}::Widget
+    ${XCB_LIBRARIES}
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

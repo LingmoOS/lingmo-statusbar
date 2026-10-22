@@ -1,3 +1,18 @@
+lingmo-statusbar (0.2.0) unstable; urgency=medium
+
+  * Phase 2, first step: the global menu. The bar now shows the menu titles of
+    the active window, read from the window's com.canonical.dbusmenu object. The
+    window advertises that object in the _KDE_NET_WM_APPMENU_SERVICE_NAME and
+    _KDE_NET_WM_APPMENU_OBJECT_PATH X11 properties, which AppMenuTracker reads
+    with libxcb; DbusMenuClient renders the layout and sends Event clicks back.
+  * Menu titles open a fly-out submenu; deeper levels drill into the second
+    column.
+  * New headless regression test for the dbusmenu client
+    (test/dbusmenu/run.sh, no display or DTK needed).
+  * Build-Depends: libxcb1-dev.
+
+ -- Lingmo OS Team <team@lingmo.org>  Thu, 22 Oct 2026 23:55:00 +0800
+
 lingmo-statusbar (0.1.0) unstable; urgency=medium
 
   * Phase 1 skeleton: full-width top bar window, application name of the active

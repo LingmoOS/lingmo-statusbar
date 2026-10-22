@@ -19,7 +19,7 @@ import Lingmo.StatusBar 1.0
 // which is how macOS arranges its menu bar (this bar is not GNOME: the clock is
 // not in the middle):
 //
-//   [ Lingmo ][ app name + reserved global menu ] ... [ tray ][ clock ][ menu ]
+//   [ Lingmo ][ app name + app menu titles ] ... [ tray ][ clock ][ menu ]
 //   |<------------------- left ------------------->|     |<---- right ---->|
 //
 // Read from the outside in, the right group is the system menu button, then the
@@ -69,7 +69,8 @@ D.ApplicationWindow {
         spacing: 0
 
         // Left, from the left edge: the Lingmo menu first (the Apple menu of the
-        // macOS layout), then the application name and the reserved global menu.
+        // macOS layout), then the application name and the app menu titles of the
+        // active window.
         LingmoMenu {
             Layout.leftMargin: 12
             Layout.alignment: Qt.AlignVCenter
@@ -80,6 +81,7 @@ D.ApplicationWindow {
         AppMenuSection {
             Layout.leftMargin: 10
             Layout.alignment: Qt.AlignVCenter
+            darkTheme: statusBar.darkTheme
             textColor: statusBar.barTextColor
         }
 

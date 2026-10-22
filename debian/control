@@ -5,6 +5,8 @@ Maintainer: Lingmo OS Team <team@lingmo.org>
 Build-Depends:
  cmake,
  debhelper-compat (= 13),
+ pkg-config,
+ libxcb1-dev,
  qt6-base-dev,
  qt6-declarative-dev,
  libdtk6core-dev,
@@ -26,8 +28,9 @@ Depends:
  qml6-module-qtqml,
 Description: macOS-style top status bar for Lingmo OS
  A full-width status bar pinned to the top edge of the screen. It shows the
- application name of the active window on the left, a clock with a calendar
- popup in the middle, and tray placeholders plus a system menu on the right.
+ Lingmo menu and the application name of the active window on the left, the
+ menu titles of the active window next to it, and the tray placeholders, clock
+ and system menu on the right.
  .
- The global menu and the real system tray are not implemented yet; both are
- planned for the second phase.
+ The menu titles come from the window's com.canonical.dbusmenu object and
+ require an X11 session; the tray is still a placeholder.

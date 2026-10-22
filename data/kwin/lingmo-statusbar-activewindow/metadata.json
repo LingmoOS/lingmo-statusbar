@@ -1,0 +1,21 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Lingmo OS Team"
+            }
+        ],
+        "Description": "Pushes the active window (caption, resource class, desktop file) to lingmo-statusbar",
+        "Description[zh_CN]": "把活动窗口的标题、窗口类与桌面文件推送给 lingmo-statusbar",
+        "EnabledByDefault": false,
+        "Id": "lingmo-statusbar-activewindow",
+        "License": "GPL-3.0-or-later",
+        "Name": "Lingmo Status Bar Active Window",
+        "Name[zh_CN]": "Lingmo 顶栏活动窗口",
+        "Version": "0.1.0"
+    },
+    "X-KDE-PluginKeyword": "lingmo-statusbar-activewindow",
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js"
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.lingmo.StatusBar">
+    <!-- Pushed by the KWin helper script (data/kwin/lingmo-statusbar-activewindow).
+         Empty strings mean "no active window". -->
+    <method name="SetActiveWindow">
+      <arg name="caption" type="s" direction="in"/>
+      <arg name="resourceClass" type="s" direction="in"/>
+      <arg name="desktopEntry" type="s" direction="in"/>
+    </method>
+    <method name="ClearActiveWindow"/>
+    <signal name="ActiveWindowChanged">
+      <arg name="caption" type="s"/>
+      <arg name="resourceClass" type="s"/>
+      <arg name="desktopEntry" type="s"/>
+    </signal>
+  </interface>
+</node>

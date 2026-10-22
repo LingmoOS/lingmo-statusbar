@@ -1,0 +1,24 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+
+# CMake / IDE
+CMakeLists.txt.user
+CMakeCache.txt
+compile_commands.json
+.vscode/
+.kdev4/
+
+# Qt artifacts
+*.user
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+*.qm
+*.o
+
+# Editor / OS noise
+*.swp
+*~
+.DS_Store

@@ -1,0 +1,33 @@
+Source: lingmo-statusbar
+Section: x11
+Priority: optional
+Maintainer: Lingmo OS Team <team@lingmo.org>
+Build-Depends:
+ cmake,
+ debhelper-compat (= 13),
+ qt6-base-dev,
+ qt6-declarative-dev,
+ libdtk6core-dev,
+ libdtk6gui-dev (>= 6.0.21),
+ libdtk6widget-dev,
+Standards-Version: 4.5.1
+Homepage: https://github.com/LingmoOS/lingmo-statusbar
+Rules-Requires-Root: no
+
+Package: lingmo-statusbar
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libdtk6declarative,
+ qml6-module-qtquick,
+ qml6-module-qtquick-window,
+ qml6-module-qtquick-controls,
+ qml6-module-qtqml,
+Description: macOS-style top status bar for Lingmo OS
+ A full-width status bar pinned to the top edge of the screen. It shows the
+ application name of the active window on the left, a clock with a calendar
+ popup in the middle, and tray placeholders plus a system menu on the right.
+ .
+ The global menu and the real system tray are not implemented yet; both are
+ planned for the second phase.

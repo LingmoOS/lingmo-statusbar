@@ -2,10 +2,12 @@
 <RCC version="1.0">
     <qresource prefix="/qml">
         <file>StatusBar.qml</file>
+        <file>LingmoMenu.qml</file>
         <file>AppMenuSection.qml</file>
         <file>ClockSection.qml</file>
         <file>CalendarPopup.qml</file>
         <file>TraySection.qml</file>
+        <file>SystemMenuButton.qml</file>
         <file>SystemMenu.qml</file>
     </qresource>
 </RCC>

@@ -13,8 +13,8 @@ SystemMenuController::SystemMenuController(QObject *parent)
 
 void SystemMenuController::trigger(const QString &action)
 {
-    // TODO(phase 2): "settings" opens the control center, "logout"/"shutdown" go
-    // through the session manager instead of being logged.
+    // TODO(phase 2): "about" and "settings" open the control center, "logout" and
+    // "shutdown" go through the session manager instead of being logged.
     qInfo().noquote() << "[system-menu]" << action << "- phase 1: logged only, nothing is executed";
 
     Q_EMIT triggered(action);

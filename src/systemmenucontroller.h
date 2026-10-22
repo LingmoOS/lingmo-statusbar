@@ -19,7 +19,7 @@ class SystemMenuController : public QObject
 public:
     explicit SystemMenuController(QObject *parent = nullptr);
 
-    // action is one of "settings", "logout", "shutdown".
+    // action is one of "about", "settings", "logout", "shutdown".
     Q_INVOKABLE void trigger(const QString &action);
 
 Q_SIGNALS:

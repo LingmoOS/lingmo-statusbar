@@ -9,7 +9,7 @@ screen, written with Qt 6 and DTK 6 (Qt Quick + `org.deepin.dtk`).
   menu and the real system tray are not implemented yet.
 
 ```text
-[ application name + reserved global menu ] ... [ clock ] ... [ tray | menu ]
+[ Lingmo ][ application name + reserved global menu ] ... [ tray ][ clock ][ menu ]
 ```
 
 ## Layout
@@ -38,16 +38,21 @@ screen, written with Qt 6 and DTK 6 (Qt Quick + `org.deepin.dtk`).
   `Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool`
   (`src/qml/StatusBar.qml`), so the bar stays above normal windows and does not
   appear in the task bar or in the window switcher.
-- Left: application name of the active window, pushed by the KWin script described
-  below. When nothing is pushed, the configurable fallback name is shown
-  (default `Lingmo OS`, override with `$LINGMO_STATUSBAR_FALLBACK_APP`).
-- Middle: time and date, updated every second from a QML `Timer`, and a month
-  calendar popup that opens on click. The calendar is display only.
-- Right: three placeholder tray icons (volume, network, battery) and a system menu
-  button. The icons are plain icon theme names looked up by `D.DciIcon`; clicking
-  one writes a line to the log. The system menu opens a `D.Menu` with Settings,
-  Log Out and Shut Down; each entry calls `SystemMenuController::trigger()`, which
-  logs the action and executes nothing.
+- Left, from the left edge: the Lingmo menu button, then the application name of
+  the active window, pushed by the KWin script described below. When nothing is
+  pushed, the configurable fallback name is shown (default `Lingmo OS`, override
+  with `$LINGMO_STATUSBAR_FALLBACK_APP`). The Lingmo menu is a `D.Menu` with About
+  This PC, Settings, Log Out and Shut Down and only logs, like the system menu.
+- Middle: empty by design. The bar follows the macOS arrangement, not the GNOME
+  one: the clock is not centred, and an `Item { Layout.fillWidth: true }` keeps
+  the two groups at their edges.
+- Right, from the right edge inwards: the system menu button, the clock, and the
+  three placeholder tray icons (volume, network, battery). The clock is updated
+  every second from a QML `Timer` and opens a month calendar popup on click; the
+  calendar is display only. The tray icons are plain icon theme names looked up by
+  `D.DciIcon`; clicking one writes a line to the log. The system menu opens a
+  `D.Menu` with Settings, Log Out and Shut Down; each entry calls
+  `SystemMenuController::trigger()`, which logs the action and executes nothing.
 
 ## What phase 1 does not do
 

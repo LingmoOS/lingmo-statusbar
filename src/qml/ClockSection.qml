@@ -5,7 +5,8 @@
 import QtQuick
 import QtQuick.Window
 
-// Centre section: time and date. Clicking it opens the calendar popup.
+// Time and date, at the right end of the bar next to the system menu button.
+// Clicking it opens the calendar popup.
 Item {
     id: root
 
@@ -79,9 +80,15 @@ Item {
         id: calendarPopup
 
         // The bar window is only as tall as the bar itself, so the popup is a
-        // separate window (popupType: Popup.Window) anchored under the clock.
+        // separate window (popupType: Popup.Window) anchored under the clock. x/y
+        // stay relative to this item, so the popup follows the clock to its place
+        // at the right end of the bar without any fixed screen coordinate.
+        //
+        // It is right aligned with the clock instead of centred on it: the clock
+        // now sits close to the right screen edge, where a centred 280 px popup
+        // would hang over that edge.
         parent: root
-        x: Math.round((root.width - width) / 2)
+        x: root.width - width
         y: root.height + 4
         darkTheme: root.darkTheme
     }
